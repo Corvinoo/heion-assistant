@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~  Copyright (C) 2026 Corvinoo
+  ~  This file is part of Heion Cloudless Assistant
+  ~
+  ~ Heion Cloudless Assistant is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ Heion Cloudless Assistant is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License along with Heion Cloudless Assistant. If not, see <https://www.gnu.org/licenses/>.
+  ~
+  ~ This program is subject to additional terms, experimental software disclaimers,
+  ~ and trademark limitations pursuant to Section 7 of the GNU GPLv3.
+  ~ See the README and first-launch notice for details.
+  -->
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:parentTag="android.widget.FrameLayout">
+
+    <FrameLayout
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_multimodal_button">
+
+        <ImageView
+            android:id="@+id/buttonIcon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:src="@android:drawable/ic_menu_camera"
+            android:tint="#D0D0D8" />
+
+        <ImageView
+            android:id="@+id/dotIndicator"
+            android:layout_width="2dp"
+            android:layout_height="2dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="4dp"
+            android:src="@android:drawable/radiobutton_on_background"
+            android:tint="#5A5A68" />
+
+    </FrameLayout>
+</merge>

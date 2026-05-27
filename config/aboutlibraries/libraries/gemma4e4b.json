@@ -1,0 +1,10 @@
+{
+  "uniqueId": "google_gemma_4_e4b",
+  "name": "Gemma 4 E4B",
+  "description": "Gemma 4 is a family of lightweight, state-of-the-art open models built by Google from the same research and technology used to create the Gemini models.",
+  "website": "https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm",
+  "licenses": [
+    "Apache-2.0"
+  ],
+  "artifactVersion": "E4B"
+}

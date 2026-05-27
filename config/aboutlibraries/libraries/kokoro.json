@@ -1,0 +1,10 @@
+{
+  "uniqueId": "kokoro",
+  "name": "Kokoro-82M",
+  "description": "A high-quality TTS model that runs locally.",
+  "website": "https://huggingface.co/hexgrad/Kokoro-82M",
+  "licenses": [
+    "Apache-2.0"
+  ],
+  "artifactVersion": "1.0.0"
+}

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~  Copyright (C) 2026 Corvinoo
+  ~  This file is part of Heion Cloudless Assistant
+  ~
+  ~ Heion Cloudless Assistant is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ Heion Cloudless Assistant is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License along with Heion Cloudless Assistant. If not, see <https://www.gnu.org/licenses/>.
+  ~
+  ~ This program is subject to additional terms, experimental software disclaimers,
+  ~ and trademark limitations pursuant to Section 7 of the GNU GPLv3.
+  ~ See the README and first-launch notice for details.
+  -->
+
+<resources>
+    <!-- Overlay Layout Grid (§2.3) -->
+    <dimen name="collapsed_bar_height">56dp</dimen>
+    <dimen name="collapsed_bar_horizontal_inset">16dp</dimen>
+    <dimen name="collapsed_bar_vertical_margin">16dp</dimen>
+    <dimen name="collapsed_bar_corner_radius">28dp</dimen>
+
+    <dimen name="expanded_panel_corner_radius_top">20dp</dimen>
+
+    <dimen name="message_bubble_corner_radius">18dp</dimen>
+    <dimen name="message_bubble_corner_radius_small">4dp</dimen>
+    <dimen name="message_horizontal_padding">16dp</dimen>
+    <dimen name="message_vertical_padding_top">10dp</dimen>
+    <dimen name="message_vertical_padding_bottom">12dp</dimen>
+    <dimen name="message_group_gap">4dp</dimen>
+    <dimen name="message_inter_group_gap">12dp</dimen>
+    <dimen name="message_list_horizontal_margin">12dp</dimen>
+
+    <dimen name="chat_window_min_height">240dp</dimen>
+    <dimen name="activity_panel_max_height">240dp</dimen>
+
+    <dimen name="source_card_corner_radius">12dp</dimen>
+    <dimen name="source_card_padding_vertical">12dp</dimen>
+    <dimen name="source_card_padding_horizontal">16dp</dimen>
+
+    <dimen name="input_field_height">52dp</dimen>
+    <dimen name="input_field_corner_radius_closed">26dp</dimen>
+    <dimen name="input_field_corner_radius_open">16dp</dimen>
+</resources>

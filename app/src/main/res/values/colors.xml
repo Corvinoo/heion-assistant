@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~  Copyright (C) 2026 Corvinoo
+  ~  This file is part of Heion Cloudless Assistant
+  ~
+  ~ Heion Cloudless Assistant is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ Heion Cloudless Assistant is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License along with Heion Cloudless Assistant. If not, see <https://www.gnu.org/licenses/>.
+  ~
+  ~ This program is subject to additional terms, experimental software disclaimers,
+  ~ and trademark limitations pursuant to Section 7 of the GNU GPLv3.
+  ~ See the README and first-launch notice for details.
+  -->
+
+<resources>
+    <!-- Overlay Color System (§2.1) -->
+    <color name="surface_overlay">#0F0F11</color>
+    <color name="surface_bar">#1A1A1E</color>
+    <color name="surface_bubble_user">#2A2D3E</color>
+    <color name="surface_bubble_ai">#161618</color>
+    <color name="surface_card">#1E1E22</color>
+
+    <color name="border_subtle">#E5E5E5</color>
+    <color name="border_medium">#AAAAAA</color>
+
+    <color name="text_primary">#F2F2F3</color>
+    <color name="text_secondary">#9A9AA8</color>
+    <color name="text_tertiary">#5A5A68</color>
+    <color name="text_accent">#7C6AF5</color>
+
+    <color name="icon_primary">#D0D0D8</color>
+    <color name="icon_accent">#7C6AF5</color>
+
+    <color name="status_searching">#4C9EEB</color>
+    <color name="status_executing">#F0A050</color>
+    <color name="status_thinking">#A87CEB</color>
+    <color name="status_recording">#4C9EEB</color>
+    <color name="status_error">#E05A5A</color>
+
+    <color name="scrim">#000000CC</color>
+    <color name="blur_tint">#0A0A0C80</color>
+
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

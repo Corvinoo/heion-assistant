@@ -1,0 +1,10 @@
+{
+  "uniqueId": "espeak-ng",
+  "name": "eSpeak-ng",
+  "description": "A multi-lingual software speech synthesizer.",
+  "website": "https://github.com/espeak-ng/espeak-ng",
+  "licenses": [
+    "GPL-3.0-or-later"
+  ],
+  "artifactVersion": "1.51"
+}

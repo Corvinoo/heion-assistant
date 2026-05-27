@@ -1,0 +1,10 @@
+{
+  "uniqueId": "openjtalk",
+  "name": "OpenJTalk",
+  "description": "A Japanese Text-to-Speech engine.",
+  "website": "https://open-jtalk.sourceforge.net/",
+  "licenses": [
+    "BSD-3-Clause"
+  ],
+  "artifactVersion": ""
+}

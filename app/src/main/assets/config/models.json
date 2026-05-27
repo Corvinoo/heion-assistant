@@ -1,0 +1,23 @@
+[
+  {
+    "id": "gemma_4_e2b",
+    "name": "Gemma 4 E2B",
+    "fileName": "gemma-4-E2B-it.litertlm",
+    "url": "https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm/resolve/main/gemma-4-E2B-it.litertlm",
+    "type": "LITERT_LLM"
+  },
+  {
+    "id": "gemma_4_e4b",
+    "name": "Gemma 4 E4B",
+    "fileName": "gemma-4-E4B-it.litertlm",
+    "url": "https://huggingface.co/litert-community/gemma-4-E4B-it-litert-lm/resolve/main/gemma-4-E4B-it.litertlm",
+    "type": "LITERT_LLM"
+  },
+  {
+    "id": "kokoro_tts",
+    "name": "Kokoro TTS",
+    "fileName": "model_q4f16.onnx",
+    "url": "https://huggingface.co/onnx-community/Kokoro-82M-ONNX/resolve/306b5c63cce277355c5624553af3ab434baa13af/model_q4f16.onnx",
+    "type": "ONNX_TTS"
+  }
+]
