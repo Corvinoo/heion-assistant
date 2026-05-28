@@ -147,6 +147,8 @@ class LocalVoiceSession(context: Context) : VoiceInteractionSession(context) {
     }
 
     override fun onShow(args: android.os.Bundle?, showFlags: Int) {
+        Log.d("LocalAssistant", "onShow: isDismissing=$isDismissing")
+        isDismissing = false
         super.onShow(args, showFlags)
         sessionController.handleEvent(SessionEvent.StartSession)
     }
@@ -189,11 +191,13 @@ class LocalVoiceSession(context: Context) : VoiceInteractionSession(context) {
 
     override fun onHide() {
         super.onHide()
+        Log.d("LocalAssistant", "onHide: isDismissing=$isDismissing")
         if (!isDismissing) {
             isDismissing = true
             sessionController.handleEvent(SessionEvent.Dismiss)
             overlayController.dismiss()
         }
+        finish()
 
         val timeoutMinutes = appContainer.settingsRepository.getModelReleaseTimeout()
         if (timeoutMinutes < 16) {
@@ -204,5 +208,10 @@ class LocalVoiceSession(context: Context) : VoiceInteractionSession(context) {
                 ModelManager.scheduleRelease(delayMillis)
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        overlayController.destroy()
     }
 }
