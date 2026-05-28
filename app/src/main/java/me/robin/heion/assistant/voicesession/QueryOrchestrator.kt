@@ -36,8 +36,16 @@ class QueryOrchestrator(
         onStatusUpdate: (AssistantStatus) -> Unit
     ): QueryResult {
         try {
-            onStatusUpdate(AssistantStatus.Preparing)
+            val initialStatus = if (ModelManager.isLoaded) AssistantStatus.Preparing else AssistantStatus.LoadingModel
+            overlayController.setAssistantStatus(initialStatus)
+            onStatusUpdate(initialStatus)
+
             ModelManager.ensureLoaded(context.applicationContext)
+
+            if (initialStatus == AssistantStatus.LoadingModel) {
+                overlayController.setAssistantStatus(AssistantStatus.Preparing)
+                onStatusUpdate(AssistantStatus.Preparing)
+            }
 
             val output = agentLoop.run(
                 userQuery = request.query,

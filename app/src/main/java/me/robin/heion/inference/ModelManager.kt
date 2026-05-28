@@ -24,6 +24,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -36,6 +39,7 @@ object ModelManager {
 
     private val modelScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
+    @Volatile
     private var backend: InferenceBackend? = null
 
     private val loadMutex = Mutex()
@@ -43,6 +47,9 @@ object ModelManager {
 
     private var loadingJob: Deferred<Unit>? = null
     private var releaseJob: Job? = null
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     val isLoaded: Boolean
         get() = backend != null
@@ -78,6 +85,7 @@ object ModelManager {
             if (backend != null) return
             loadingJob?.let { return@withLock it }
 
+            _isLoading.value = true
             val newJob = modelScope.async {
                 Log.d(TAG, "Loading model: ${if (savedModelPath.isEmpty()) "bundled" else savedModelPath}")
 
@@ -101,6 +109,7 @@ object ModelManager {
             loadMutex.withLock {
                 if (loadingJob === job) {
                     loadingJob = null
+                    _isLoading.value = false
                 }
             }
         }
