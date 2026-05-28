@@ -75,14 +75,12 @@ object ModelManager {
     suspend fun ensureLoaded(context: Context) {
         cancelScheduledRelease()
 
-        if (backend != null) return
-
         val appContext = context.applicationContext
         val settings = SettingsRepository(appContext)
         val savedModelPath = settings.getLlmModelPath() ?: ""
 
         val job = loadMutex.withLock {
-            if (backend != null) return
+            if (backend != null) return@withLock null
             loadingJob?.let { return@withLock it }
 
             _isLoading.value = true
@@ -97,11 +95,14 @@ object ModelManager {
 
             loadingJob = newJob
             newJob
-        }
+        } ?: return
 
         try {
             job.await()
         } catch (t: Throwable) {
+            if (t is kotlinx.coroutines.CancellationException) {
+                throw t
+            }
             Log.e(TAG, "Failed to load model", t)
             backend = null
             throw t
@@ -140,14 +141,21 @@ object ModelManager {
 
     fun release() {
         cancelScheduledRelease()
-        modelScope.launch {
+        val job = modelScope.launch {
+            // Cancel any ongoing loading
+            loadMutex.withLock {
+                loadingJob?.cancel()
+                loadingJob = null
+                _isLoading.value = false
+            }
+
             inferenceMutex.withLock {
                 backend?.release()
                 backend = null
-                loadingJob = null
                 Log.d(TAG, "Model released")
             }
         }
+        releaseJob = job
     }
 
     fun scheduleRelease(delayMillis: Long) {
