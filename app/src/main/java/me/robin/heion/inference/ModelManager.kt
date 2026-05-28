@@ -24,6 +24,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -36,6 +39,7 @@ object ModelManager {
 
     private val modelScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
+    @Volatile
     private var backend: InferenceBackend? = null
 
     private val loadMutex = Mutex()
@@ -43,6 +47,9 @@ object ModelManager {
 
     private var loadingJob: Deferred<Unit>? = null
     private var releaseJob: Job? = null
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     val isLoaded: Boolean
         get() = backend != null
@@ -68,16 +75,15 @@ object ModelManager {
     suspend fun ensureLoaded(context: Context) {
         cancelScheduledRelease()
 
-        if (backend != null) return
-
         val appContext = context.applicationContext
         val settings = SettingsRepository(appContext)
         val savedModelPath = settings.getLlmModelPath() ?: ""
 
         val job = loadMutex.withLock {
-            if (backend != null) return
+            if (backend != null) return@withLock null
             loadingJob?.let { return@withLock it }
 
+            _isLoading.value = true
             val newJob = modelScope.async {
                 Log.d(TAG, "Loading model: ${if (savedModelPath.isEmpty()) "bundled" else savedModelPath}")
 
@@ -89,11 +95,14 @@ object ModelManager {
 
             loadingJob = newJob
             newJob
-        }
+        } ?: return
 
         try {
             job.await()
         } catch (t: Throwable) {
+            if (t is kotlinx.coroutines.CancellationException) {
+                throw t
+            }
             Log.e(TAG, "Failed to load model", t)
             backend = null
             throw t
@@ -101,6 +110,7 @@ object ModelManager {
             loadMutex.withLock {
                 if (loadingJob === job) {
                     loadingJob = null
+                    _isLoading.value = false
                 }
             }
         }
@@ -131,14 +141,21 @@ object ModelManager {
 
     fun release() {
         cancelScheduledRelease()
-        modelScope.launch {
+        val job = modelScope.launch {
+            // Cancel any ongoing loading
+            loadMutex.withLock {
+                loadingJob?.cancel()
+                loadingJob = null
+                _isLoading.value = false
+            }
+
             inferenceMutex.withLock {
                 backend?.release()
                 backend = null
-                loadingJob = null
                 Log.d(TAG, "Model released")
             }
         }
+        releaseJob = job
     }
 
     fun scheduleRelease(delayMillis: Long) {

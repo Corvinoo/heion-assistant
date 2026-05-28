@@ -144,4 +144,8 @@ class OverlayController(
     fun dismiss() {
         coordinator.dismiss()
     }
+
+    fun destroy() {
+        coordinator.destroy()
+    }
 }

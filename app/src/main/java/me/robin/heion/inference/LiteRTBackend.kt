@@ -29,6 +29,7 @@ import com.google.ai.edge.litertlm.EngineConfig
 import com.google.ai.edge.litertlm.ExperimentalApi
 import com.google.ai.edge.litertlm.Message
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -194,6 +195,7 @@ class LiteRTBackend(private val context: Context) : InferenceBackend {
 
                 conversation.sendMessageAsync(lastMessage)
                     .collect { message: Message ->
+                        ensureActive()
                         if (stopDetected) return@collect
 
                         val thoughtDelta = try {
@@ -253,6 +255,11 @@ class LiteRTBackend(private val context: Context) : InferenceBackend {
         }
     }
 
+    override fun release() {
+        engine?.close()
+        engine = null
+    }
+
     private fun ChatTurn.toMessage(): Message {
         return when (this) {
             is ChatTurn.User -> {
@@ -278,11 +285,6 @@ class LiteRTBackend(private val context: Context) : InferenceBackend {
             }
             is ChatTurn.System -> Message.system(text)
         }
-    }
-
-    override fun release() {
-        engine?.close()
-        engine = null
     }
 
     companion object {

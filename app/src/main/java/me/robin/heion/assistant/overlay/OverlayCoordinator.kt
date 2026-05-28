@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.robin.heion.assistant.profiles.ConversationMessage
@@ -242,6 +243,10 @@ class OverlayCoordinator(
         renderer.collapse()
         conversationRepository.clear()
         onDismiss()
+    }
+
+    fun destroy() {
+        scope.cancel()
     }
 
     fun lockMode() {
