@@ -41,9 +41,11 @@ class LocalVoiceSession(context: Context) : VoiceInteractionSession(context) {
     override fun onCreate() {
         super.onCreate()
 
+        val themedContext = android.view.ContextThemeWrapper(context, me.robin.heion.R.style.Theme_LocalAssistant)
+
         if (!appContainer.settingsRepository.hasAcceptedDisclaimer()) {
             Log.w("LocalAssistant", "Assistant triggered but disclaimer not accepted. Finishing session.")
-            Toast.makeText(context, "Please accept the terms of use in the Local Assistant app first.", Toast.LENGTH_LONG).show()
+            Toast.makeText(themedContext, "Please accept the terms of use in the Local Assistant app first.", Toast.LENGTH_LONG).show()
             finish()
             return
         }
@@ -51,7 +53,7 @@ class LocalVoiceSession(context: Context) : VoiceInteractionSession(context) {
         configureWindowForIme()
 
         overlayController = OverlayController(
-            context = context,
+            context = themedContext,
             profileManager = appContainer.profileManager,
             conversationRepository = appContainer.conversationRepository,
             onQuery = { query, includeScreenshot, includeScreenText ->
@@ -101,14 +103,14 @@ class LocalVoiceSession(context: Context) : VoiceInteractionSession(context) {
         overlayController.initialize()
         
         queryOrchestrator = QueryOrchestrator(
-            context = context,
+            context = themedContext,
             agentLoop = appContainer.agentLoop,
             overlayController = overlayController,
             languageDetector = appContainer.languageDetector
         )
 
         sessionController = VoiceSessionController(
-            context = context,
+            context = themedContext,
             overlayController = overlayController,
             recorderController = appContainer.recorderController,
             contextRepository = appContainer.contextRepository,
