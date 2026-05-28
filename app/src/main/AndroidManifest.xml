@@ -84,6 +84,7 @@
         <service
             android:name=".assistant.LocalVoiceInteractionSessionService"
             android:permission="android.permission.BIND_VOICE_INTERACTION"
+            android:theme="@style/Theme.LocalAssistant"
             tools:ignore="ProtectedPermissions"
             android:exported="true" />
 

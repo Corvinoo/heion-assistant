@@ -18,8 +18,16 @@ package me.robin.heion.setup
 import android.content.Context
 import android.content.Intent
 import android.provider.Settings
+import android.content.ComponentName
 
 object AssistantSetupManager {
+
+    fun isDefaultAssistant(context: Context): Boolean {
+        val setting = Settings.Secure.getString(context.contentResolver, "assistant")
+        if (setting.isNullOrBlank()) return false
+        val componentName = ComponentName.unflattenFromString(setting) ?: return false
+        return componentName.packageName == context.packageName
+    }
 
     fun openAssistantSettings(context: Context) {
 

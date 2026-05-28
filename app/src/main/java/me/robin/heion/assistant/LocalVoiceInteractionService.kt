@@ -28,6 +28,9 @@ import me.robin.heion.settings.SettingsRepository
 
 class LocalVoiceInteractionService : VoiceInteractionService() {
 
+    private var isReady = false
+    private var pendingShowSession = false
+
     override fun onCreate() {
         super.onCreate()
         Log.d("LocalAssistant", "VoiceInteractionService created")
@@ -35,6 +38,8 @@ class LocalVoiceInteractionService : VoiceInteractionService() {
 
     override fun onReady() {
         super.onReady()
+        isReady = true
+        Log.d("LocalAssistant", "VoiceInteractionService ready")
 
         val settings = SettingsRepository(applicationContext)
 
@@ -50,12 +55,25 @@ class LocalVoiceInteractionService : VoiceInteractionService() {
             // Ensure any previously loaded model is released if setting changed
             ModelManager.release()
         }
+
+        if (pendingShowSession) {
+            Log.d("LocalAssistant", "Processing pending trigger")
+            triggerAssistant()
+            pendingShowSession = false
+        }
     }
 
-
+    private fun triggerAssistant() {
+        showSession(
+            Bundle(),
+            VoiceInteractionSession.SHOW_WITH_ASSIST or
+                    VoiceInteractionSession.SHOW_WITH_SCREENSHOT
+        )
+    }
 
     override fun onShutdown() {
         super.onShutdown()
+        isReady = false
         ModelManager.release()
         Log.d("LocalAssistant", "VoiceInteractionService shutdown")
     }
@@ -68,11 +86,12 @@ class LocalVoiceInteractionService : VoiceInteractionService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action == "me.robin.heion.TRIGGER_ASSISTANT") {
             Log.d("LocalAssistant", "Manual trigger received")
-            showSession(
-                Bundle(),
-                VoiceInteractionSession.SHOW_WITH_ASSIST or 
-                VoiceInteractionSession.SHOW_WITH_SCREENSHOT
-            )
+            if (isReady) {
+                triggerAssistant()
+            } else {
+                Log.d("LocalAssistant", "Service not ready yet, pending trigger")
+                pendingShowSession = true
+            }
         }
         return super.onStartCommand(intent, flags, startId)
     }
