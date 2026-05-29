@@ -16,9 +16,7 @@
 package me.robin.heion
 
 import android.content.ContentValues.TAG
-import android.net.Uri
 import android.os.Bundle
-import android.provider.OpenableColumns
 import android.util.Log
 import android.view.ViewTreeObserver
 import android.widget.ScrollView

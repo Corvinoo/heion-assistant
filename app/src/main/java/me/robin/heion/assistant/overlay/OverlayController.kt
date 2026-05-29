@@ -79,24 +79,29 @@ class OverlayController(
                 predicate = { it is ConversationMessage.Model },
                 update = { 
                     val model = it as ConversationMessage.Model
-                    when (status) {
-                        is AssistantStatus.Thinking -> model.copy(
-                            status = status,
-                            thinkingText = status.thought.takeIf { it.isNotEmpty() } ?: model.thinkingText,
-                            thinkingTimeMs = status.timeMs ?: model.thinkingTimeMs,
-                            isThoughtExpanded = model.isThoughtExpanded // Preserve
-                        )
-                        is AssistantStatus.Streaming -> model.copy(
-                            status = status,
-                            text = status.text.takeIf { it.isNotEmpty() } ?: model.text,
-                            thinkingText = status.thought ?: model.thinkingText,
-                            thinkingTimeMs = status.thinkingTimeMs ?: model.thinkingTimeMs,
-                            isThoughtExpanded = model.isThoughtExpanded // Preserve
-                        )
-                        else -> model.copy(
-                            status = status,
-                            isThoughtExpanded = model.isThoughtExpanded // Preserve
-                        )
+
+                    if (model.status is AssistantStatus.Error && status !is AssistantStatus.Error) {
+                        model
+                    } else {
+                        when (status) {
+                            is AssistantStatus.Thinking -> model.copy(
+                                status = status,
+                                thinkingText = status.thought.takeIf { it.isNotEmpty() } ?: model.thinkingText,
+                                thinkingTimeMs = status.timeMs ?: model.thinkingTimeMs,
+                                isThoughtExpanded = model.isThoughtExpanded // Preserve
+                            )
+                            is AssistantStatus.Streaming -> model.copy(
+                                status = status,
+                                text = status.text.takeIf { it.isNotEmpty() } ?: model.text,
+                                thinkingText = status.thought ?: model.thinkingText,
+                                thinkingTimeMs = status.thinkingTimeMs ?: model.thinkingTimeMs,
+                                isThoughtExpanded = model.isThoughtExpanded // Preserve
+                            )
+                            else -> model.copy(
+                                status = status,
+                                isThoughtExpanded = model.isThoughtExpanded // Preserve
+                            )
+                        }
                     }
                 }
             )

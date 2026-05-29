@@ -67,8 +67,11 @@ class QueryOrchestrator(
         } catch (e: CancellationException) {
             return QueryResult.Cancelled
         } catch (e: Exception) {
-            overlayController.appendToken("\n[Error: ${e.message ?: "unknown"}]")
-            return QueryResult.Error(e.message ?: "unknown")
+            val errorMsg = e.message ?: "unknown"
+            val status = AssistantStatus.Error(errorMsg)
+            overlayController.setAssistantStatus(status)
+            onStatusUpdate(status)
+            return QueryResult.Error(errorMsg)
         }
     }
 }

@@ -126,7 +126,8 @@ class LocalVoiceSession(context: Context) : VoiceInteractionSession(context) {
             try {
                 ModelManager.ensureLoaded(context.applicationContext)
             } catch (e: Exception) {
-                e.message?.let { Log.d("error", it) }
+                Log.e("LocalAssistant", "Model loading failed", e)
+                sessionController.handleEvent(SessionEvent.Error(e.message ?: "Unknown model loading error"))
             }
         }
     }
