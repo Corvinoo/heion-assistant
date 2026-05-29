@@ -33,6 +33,7 @@ import androidx.work.WorkInfo
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import me.robin.heion.databinding.ActivityModelLibraryBinding
 import me.robin.heion.databinding.ItemModelBinding
@@ -61,7 +62,9 @@ class ModelLibraryActivity : AppCompatActivity() {
         if (!modelsDir.exists()) modelsDir.mkdirs()
         
         val targetFile = File(modelsDir, fileName)
-        
+
+        val startTime = System.currentTimeMillis()
+
         binding.importProgressOverlay.visibility = View.VISIBLE
         binding.btnImport.isEnabled = false
 
@@ -85,6 +88,13 @@ class ModelLibraryActivity : AppCompatActivity() {
         } catch (e: Exception) {
             Log.e("ModelLibrary", "Failed to import model", e)
         } finally {
+            val minimumTime = 1500L;
+            val elapsedTime = System.currentTimeMillis() - startTime
+            val remainingTime = minimumTime - elapsedTime
+
+            if (remainingTime > 0) {
+                delay(remainingTime)
+            }
             binding.importProgressOverlay.visibility = View.GONE
             binding.btnImport.isEnabled = true
         }
