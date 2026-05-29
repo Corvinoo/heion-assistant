@@ -16,13 +16,12 @@
 package me.robin.heion
 
 import android.content.ContentValues.TAG
-import android.net.Uri
 import android.os.Bundle
-import android.provider.OpenableColumns
 import android.util.Log
 import android.view.ViewTreeObserver
 import android.widget.ScrollView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.ai.edge.litertlm.ExperimentalApi
@@ -135,12 +134,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnTriggerAssistant.setOnClickListener {
+            if (!AssistantSetupManager.isDefaultAssistant(this)) {
+                Toast.makeText(this, "Please set Heion as your default assistant app first.", Toast.LENGTH_LONG).show()
+                AssistantSetupManager.openAssistantSettings(this)
+                return@setOnClickListener
+            }
+
             val intent = android.content.Intent(this, me.robin.heion.assistant.LocalVoiceInteractionService::class.java)
             intent.action = "me.robin.heion.TRIGGER_ASSISTANT"
             try {
                 startService(intent)
             } catch (e: Exception) {
                 Log.e("MainActivity", "Failed to start assistant service", e)
+                Toast.makeText(this, "Failed to start assistant: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -212,6 +218,7 @@ class MainActivity : AppCompatActivity() {
     private fun updateStatusText() {
         val overlayGranted = PermissionManager.hasOverlayPermission(this)
         val audioGranted = PermissionManager.hasAudioPermission(this)
+        val isDefaultAssistant = AssistantSetupManager.isDefaultAssistant(this)
 
         binding.txtOverlayStatus.text =
             if (overlayGranted) {
@@ -225,6 +232,13 @@ class MainActivity : AppCompatActivity() {
                 "Audio permission granted"
             } else {
                 "Audio permission missing"
+            }
+
+        binding.txtAssistantStatus.text =
+            if (isDefaultAssistant) {
+                "Heion is the default assistant"
+            } else {
+                "Heion is not the default assistant"
             }
     }
 

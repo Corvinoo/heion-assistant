@@ -32,4 +32,5 @@ sealed class SessionEvent {
     object GenerationFinished : SessionEvent()
     object Dismiss : SessionEvent()
     object Stop : SessionEvent()
+    data class Error(val message: String) : SessionEvent()
 }

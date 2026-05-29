@@ -104,6 +104,11 @@ class VoiceSessionController(
                 stopInference()
                 transitionTo(SessionState.Idle)
             }
+            is SessionEvent.Error -> {
+                stopInference()
+                transitionTo(SessionState.Idle)
+                overlayController.setAssistantStatus(me.robin.heion.assistant.AssistantStatus.Error("No model is currently active. \nPlease visit the Model Library."))
+            }
         }
     }
 
@@ -211,11 +216,15 @@ class VoiceSessionController(
                 onStatusUpdate = { /* status already pushed by orchestrator to overlay */ }
             )
 
-            if (coroutineContext.isActive && result is QueryResult.Success) {
-                if (isVoice) {
-                    streamingTtsPlayer.finish()
+            if (coroutineContext.isActive) {
+                if (result is QueryResult.Success) {
+                    if (isVoice) {
+                        streamingTtsPlayer.finish()
+                    }
+                    handleEvent(SessionEvent.GenerationFinished)
+                } else if (result is QueryResult.Error) {
+                    transitionTo(SessionState.Idle)
                 }
-                handleEvent(SessionEvent.GenerationFinished)
             }
         }
         

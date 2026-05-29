@@ -134,7 +134,7 @@ class LiteRTBackend(private val context: Context) : InferenceBackend {
 
     private fun copyBundledModelToInternalStorage(): String {
         val modelName = ModelDiscovery.obtainAssetModel(context)
-            ?: throw IllegalStateException("No LiteRT model found in app assets (models/ folder)")
+            ?: throw IllegalStateException("No LLM model found")
 
         val targetFile = File(context.filesDir, modelName)
         if (!targetFile.exists() || targetFile.length() == 0L) {

@@ -286,9 +286,12 @@ class MessageAdapter(private val markwon: Markwon) : RecyclerView.Adapter<Recycl
             val isBusy = message.status !is AssistantStatus.Idle && 
                 message.status !is AssistantStatus.Thinking && 
                 message.status !is AssistantStatus.Streaming && 
+                message.status !is AssistantStatus.Error &&
                 message.text.isEmpty()
 
-            val shouldShowStatus = isBusy || isThinkingState || isThoughtDone || hasThinkingContent || message.status is AssistantStatus.Streaming
+            val shouldShowStatus = isBusy || isThinkingState || isThoughtDone || 
+                hasThinkingContent || message.status is AssistantStatus.Streaming || 
+                message.status is AssistantStatus.Error
             statusContainer.visibility = if (shouldShowStatus) View.VISIBLE else View.GONE
 
             if (shouldShowStatus) {
@@ -299,7 +302,13 @@ class MessageAdapter(private val markwon: Markwon) : RecyclerView.Adapter<Recycl
                     else -> message.status.getLabel()
                 }
                 
-                statusProgress.visibility = if (isBusy || isThinkingState || (message.status is AssistantStatus.Streaming && !isThoughtDone)) View.VISIBLE else View.GONE
+                if (message.status is AssistantStatus.Error) {
+                    statusText.setTextColor(itemView.context.getColor(android.R.color.holo_red_light))
+                    statusProgress.visibility = View.GONE
+                } else {
+                    statusText.setTextColor(itemView.context.getColor(R.color.text_secondary))
+                    statusProgress.visibility = if (isBusy || isThinkingState || (message.status is AssistantStatus.Streaming && !isThoughtDone)) View.VISIBLE else View.GONE
+                }
                 
                 statusContainer.isClickable = hasThinkingContent || isThinkingState || isThoughtDone
                 statusContainer.isEnabled = hasThinkingContent || isThinkingState || isThoughtDone
