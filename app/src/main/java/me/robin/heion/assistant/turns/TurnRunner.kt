@@ -86,7 +86,11 @@ class TurnRunner(
         )
 
         val thinkingEnabled = activeProfile.reasoningConfig().thinkingEnabled
-        if (thinkingEnabled) {
+        val hasImage = screenshot != null || history.any { it is ConversationMessage.User && it.image != null }
+
+        if (hasImage) {
+            onStatusUpdate(AssistantStatus.LookingAtImages)
+        } else if (thinkingEnabled) {
             onStatusUpdate(AssistantStatus.Thinking("", null))
         } else {
             onStatusUpdate(AssistantStatus.Preparing)
