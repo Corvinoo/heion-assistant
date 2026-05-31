@@ -20,6 +20,7 @@ import kotlinx.coroutines.CancellationException
 import me.robin.heion.assistant.AssistantStatus
 import me.robin.heion.assistant.agent.AgentLoop
 import me.robin.heion.assistant.overlay.OverlayController
+import me.robin.heion.assistant.profiles.ConversationMessage
 import me.robin.heion.inference.ModelManager
 import me.robin.heion.nlp.LanguageDetector
 
@@ -36,15 +37,21 @@ class QueryOrchestrator(
         onStatusUpdate: (AssistantStatus) -> Unit
     ): QueryResult {
         try {
-            val initialStatus = if (ModelManager.isLoaded) AssistantStatus.Preparing else AssistantStatus.LoadingModel
+            val hasImage = request.includeScreenshot || executionContext.history.any { it is ConversationMessage.User && it.image != null }
+            val initialStatus = if (ModelManager.isLoaded) {
+                if (hasImage) AssistantStatus.LookingAtImages else AssistantStatus.Preparing
+            } else {
+                AssistantStatus.LoadingModel
+            }
             overlayController.setAssistantStatus(initialStatus)
             onStatusUpdate(initialStatus)
 
             ModelManager.ensureLoaded(context.applicationContext)
 
             if (initialStatus == AssistantStatus.LoadingModel) {
-                overlayController.setAssistantStatus(AssistantStatus.Preparing)
-                onStatusUpdate(AssistantStatus.Preparing)
+                val postLoadStatus = if (hasImage) AssistantStatus.LookingAtImages else AssistantStatus.Preparing
+                overlayController.setAssistantStatus(postLoadStatus)
+                onStatusUpdate(postLoadStatus)
             }
 
             val output = agentLoop.run(

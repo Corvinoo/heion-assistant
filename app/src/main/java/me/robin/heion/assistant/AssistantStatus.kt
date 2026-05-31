@@ -58,7 +58,7 @@ sealed class AssistantStatus {
                 else -> "Generating..."
             }
         }
-        LookingAtImages -> "Looking at images..." // Todo: needs fixing, current implementation does not use it correctly
+        LookingAtImages -> "Looking at image..."
         SearchingOnline -> "Searching online..."
         UsingTools -> "Using tools..."
         is Error -> "Error: $message"
